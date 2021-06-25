@@ -1,0 +1,26 @@
+# Указание версии
+version: '3.5'
+
+# Объявление сервисов
+services:
+  jenkins:
+    # Название контейнера
+    container_name: jenkins
+    # Указание образа для контейнера
+    image: jenkins/jenkins:lts-jdk11
+    user: root
+    # Порты (на машине:в контейнере)
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - ./jenkins/secret:/var/jenkins_home/secrets/
+      - ./jenkins/data:/var/jenkins_home/
+  
+  # Сервис для интеграции
+  integration:
+    container_name: integration
+    # Билдим по Dockerfile в папке ./integration
+    build: ./integration
+    # Контейнер будет использовать сетевое пространство имен хоста
+    network_mode: "host"
